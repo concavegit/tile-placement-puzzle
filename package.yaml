@@ -1,0 +1,47 @@
+name:                arrange-tiles
+version:             0.1.0.0
+license:             BSD3
+author:              "Kawin Nikomborirak"
+maintainer:          "concavegit@gmail.com"
+copyright:           "2019 Kawin Nikomborirak"
+
+extra-source-files:
+  - README.org
+  - ChangeLog.org
+
+category:            Puzzle
+
+description:         Please see the README on GitLab at <https://gitlab.com/concavegit/arrange-tiles#readme>
+
+dependencies:
+  - base >= 4.7 && < 5
+  - grid
+
+library:
+  source-dirs: src
+
+ghc-options:
+  - -Wall
+  - -O2
+
+executables:
+  arrange:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - arrange-tiles
+
+tests:
+  arrange-tiles-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - arrange-tiles
