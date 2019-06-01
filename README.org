@@ -1,3 +1,11 @@
 #+title: Arrange Tile Puzzle
 
-This is a program
+This is a program to solve tile puzzles.
+The utility functions are in [[file:src/Puzzle.hs]], and they are used to solve the puzzle in [[file:app/Main.hs]].
+
+* Instructions
+- Install [[https://docs.haskellstack.org/en/stable/README/][stack]]
+- Clone and =cd= into this repository =git clone https://gitlab.com/concavegit/arrange-tiles.git && cd arrange-tiles=.
+- Build with =stack build=
+- Run with =stack exec arrange=.
+- To see runtime statistics, run with =stack exec arrange -- +RTS -S=
