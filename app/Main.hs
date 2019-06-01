@@ -66,4 +66,4 @@ moves0 =
         ]
 
 main :: IO ()
-main = print $ solvePuzzle 3 3 puzzle0 moves0
+main = print $ solvePuzzle 3 3 puzzle0

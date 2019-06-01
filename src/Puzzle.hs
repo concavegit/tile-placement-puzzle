@@ -55,25 +55,17 @@ instance Complementary TileEdge where
         complement OrangeBack  = OrangeFront
 
 -- | Solve the puzzle. 'r' and 'c' are the amount rows and columns in
--- the puzzle, 'tiles' are the available tiles, and 'moves' is the index
--- is the sequential placement strategy along with which directions to
--- check.
--- Since a good placement strategy places tiles from left to right and
--- top to bottom, often only the North and West directions need to be
--- checked when placing a new tile down, which is why it is an
--- argument rather than allowing the function to test all four edges
--- when only one could suffice.
+-- the puzzle and 'tiles' are the available tiles.
 solvePuzzle
         :: Int
         -> Int
         -> [Tile]
-        -> [((Int, Int), [Direction])]
         -> [Array (Int, Int) Tile]
-solvePuzzle r c tiles moves =
+solvePuzzle r c tiles =
         nubBy boardCongruent . catMaybes $ sequence . fst <$> foldr
                 puzzleIteration
                 [(A.listArray ((0, 0), (c - 1, r - 1)) (repeat Nothing), tiles)]
-                (reverse moves)
+                (reverse (generateMoves r c))
 
 -- | Given a placement 'idx', the directions to check 'direction', and
 -- current possible boards from previous placements, return an updated
@@ -199,3 +191,22 @@ rotateBoard board = rotateTile <$> A.array
         ((swap *** swap) _bounds)
         (zip (swap . first (x1 + x0 -) <$> A.indices board) (A.elems board))
         where _bounds@((x0, _), (x1, _)) = A.bounds board
+
+generateMoves' :: Int -> [((Int, Int), [Direction])]
+generateMoves' 0 = []
+generateMoves' 1 = [((0, 0), [])]
+generateMoves' n =
+        generateMoves' (n - 1)
+                ++ zip ((, n - 1) <$> [0 .. n - 2])
+                       ([North] : repeat [West, North])
+                ++ zip ((n - 1, ) <$> [0 .. n - 1])
+                       ([West] : repeat [West, North])
+
+generateMoves :: Int -> Int -> [((Int, Int), [Direction])]
+generateMoves r c
+        | r >= c = generateMoves' c ++ zip
+                (flip (,) <$> [c .. r - 1] <*> [0 .. c - 1])
+                (take c ([North] : repeat [North, West]) >>= replicate (r - c))
+        | otherwise = generateMoves' r ++ zip
+                ((,) <$> [r .. c - 1] <*> [0 .. r - 1])
+                (take r ([West] : repeat [West, North]) >>= replicate (c - r))
