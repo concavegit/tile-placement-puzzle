@@ -227,7 +227,7 @@ showBoard board = showBoard' r c (A.elems (transposeArray board))
 
 instance Show Tile where
         show tile = unlines
-                [ _topDiv
+                [ '/' : replicate (_width - 2) '-' ++ "\\"
                 , '|'
                 :  _leftSpaces _tileTop
                 ++ _tileTop
@@ -245,7 +245,7 @@ instance Show Tile where
                 ++ _tileBottom
                 ++ _rightSpaces _tileBottom
                 ++ "|"
-                , _topDiv
+                , '\\' : replicate (_width - 2) '-' ++ "/"
                 ]
 
             where
@@ -258,7 +258,6 @@ instance Show Tile where
                 _rightPad tile' = _width - 2 - _leftPad tile' - length tile'
                 _leftSpaces tile' = replicate (_leftPad tile') ' '
                 _rightSpaces tile' = replicate (_rightPad tile') ' '
-                _topDiv = '+' : replicate (_width - 2) '-' ++ "+"
 
 showTiles :: [Tile] -> String
 showTiles =
