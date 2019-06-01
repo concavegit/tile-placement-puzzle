@@ -8,7 +8,7 @@ The utility functions are in [[file:src/Puzzle.hs]], and they are used to solve 
 The generated solutions for the puzzle above are:
 
 #+begin_src text
-   +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
   |       GreenBack        ||        BlueBack        ||       PinkFront        |
   |BlueBack        PinkBack||PinkFront      GreenBack||GreenFront     BlueFront|
   |      OrangeFront       ||       BlueFront        ||        BlueBack        |
