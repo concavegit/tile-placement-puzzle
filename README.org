@@ -1,7 +1,61 @@
 #+title: Arrange Tile Puzzle
 
+[[file:res/tile_puzzle.jpg]]
+
 This is a program to solve tile puzzles.
 The utility functions are in [[file:src/Puzzle.hs]], and they are used to solve the puzzle in [[file:app/Main.hs]].
+
+The generated solutions for the puzzle above are:
+
+#+begin_src text
+   +------------------------++------------------------++------------------------+
+  |       GreenBack        ||        BlueBack        ||       PinkFront        |
+  |BlueBack        PinkBack||PinkFront      GreenBack||GreenFront     BlueFront|
+  |      OrangeFront       ||       BlueFront        ||        BlueBack        |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |       OrangeBack       ||        BlueBack        ||       BlueFront        |
+  |GreenFront     PinkFront||PinkBack      GreenFront||GreenBack      PinkFront|
+  |       GreenBack        ||       OrangeBack       ||      OrangeFront       |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |       GreenFront       ||      OrangeFront       ||       OrangeBack       |
+  |PinkBack       BlueFront||BlueBack       PinkFront||PinkBack      OrangeBack|
+  |       OrangeBack       ||      OrangeFront       ||       GreenBack        |
+  +------------------------++------------------------++------------------------+
+
+  +------------------------++------------------------++------------------------+
+  |        BlueBack        ||        PinkBack        ||       BlueFront        |
+  |OrangeFront  OrangeFront||OrangeBack    GreenFront||GreenBack      PinkFront|
+  |       PinkFront        ||       BlueFront        ||        BlueBack        |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |        PinkBack        ||        BlueBack        ||       BlueFront        |
+  |OrangeBack      BlueBack||BlueFront     GreenFront||GreenBack      PinkFront|
+  |       GreenFront       ||       PinkFront        ||      OrangeFront       |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |       GreenBack        ||        PinkBack        ||       OrangeBack       |
+  |PinkFront     GreenFront||GreenBack    OrangeFront||OrangeBack     GreenBack|
+  |       OrangeBack       ||        BlueBack        ||        PinkBack        |
+  +------------------------++------------------------++------------------------+
+
+  +------------------------++------------------------++------------------------+
+  |       GreenBack        ||        BlueBack        ||       PinkFront        |
+  |OrangeBack      PinkBack||PinkFront      GreenBack||GreenFront     BlueFront|
+  |       OrangeBack       ||       BlueFront        ||        BlueBack        |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |      OrangeFront       ||        BlueBack        ||       BlueFront        |
+  |BlueBack       PinkFront||PinkBack      GreenFront||GreenBack      PinkFront|
+  |      OrangeFront       ||       OrangeBack       ||      OrangeFront       |
+  +------------------------++------------------------++------------------------+
+  +------------------------++------------------------++------------------------+
+  |       OrangeBack       ||      OrangeFront       ||       OrangeBack       |
+  |GreenFront     PinkFront||PinkBack        BlueBack||BlueFront       PinkBack|
+  |       GreenBack        ||       GreenBack        ||       GreenFront       |
+  +------------------------++------------------------++------------------------+
+#+end_src
 
 * Instructions
 - Install [[https://docs.haskellstack.org/en/stable/README/][stack]]
