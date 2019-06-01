@@ -233,13 +233,13 @@ instance Show Tile where
                 ++ _tileTop
                 ++ _rightSpaces _tileTop
                 ++ "|"
-                , "| "
+                , "|"
                 ++ _tileLeft
                 ++ replicate
-                           (_width - 4 - length _tileLeft - length _tileRight)
+                           (_width - 2 - length _tileLeft - length _tileRight)
                            ' '
                 ++ _tileRight
-                ++ " |"
+                ++ "|"
                 , '|'
                 :  _leftSpaces _tileBottom
                 ++ _tileBottom
