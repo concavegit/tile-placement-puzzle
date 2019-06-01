@@ -54,19 +54,6 @@ puzzle0 =
                }
         ]
 
-moves0 :: [((Int, Int), [Direction])]
-moves0 =
-        [ ((0, 0), [])
-        , ((1, 0), [West])
-        , ((0, 1), [North])
-        , ((1, 1), [West, North])
-        , ((2, 0), [West])
-        , ((2, 1), [West, North])
-        , ((0, 2), [North])
-        , ((1, 2), [West, North])
-        , ((2, 2), [West, North])
-        ]
-
 main :: IO ()
 main = putStrLn $ intercalate
         "\n\n"
