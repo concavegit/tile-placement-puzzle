@@ -15,17 +15,24 @@ import           Data.Tuple
 import           Control.Arrow
 import           Data.List
 
+-- | A class for complementary data types, such as the edges of the
+-- puzzle.
 class Eq a => Complementary a where
+  -- | Return the complement of the argument.
   complement :: a -> a
   isComplement :: a -> a -> Bool
+
+  -- | Check if the two arguments are complements of each other.
   isComplement = (==) . complement
 
+-- | Data type for the edges of the tiles.
 data TileEdge = PinkFront | PinkBack
   | BlueFront | BlueBack
   | GreenFront | GreenBack
   | OrangeFront | OrangeBack
   deriving (Eq, Show)
 
+-- | Data type describing tiles by their edges.
 data Tile = Tile
   { _tileLeft :: TileEdge
   , _tileRight :: TileEdge
@@ -47,24 +54,42 @@ instance Complementary TileEdge where
         complement OrangeFront = OrangeBack
         complement OrangeBack  = OrangeFront
 
+-- | Solve the puzzle. 'r' and 'c' are the amount rows and columns in
+-- the puzzle, 'tiles' are the available tiles, and 'moves' is the index
+-- is the sequential placement strategy along with which directions to
+-- check.
+-- Since a good placement strategy places tiles from left to right and
+-- top to bottom, often only the North and West directions need to be
+-- checked when placing a new tile down, which is why it is an
+-- argument rather than allowing the function to test all four edges
+-- when only one could suffice.
 solvePuzzle
-        :: ((Int, Int), (Int, Int))
+        :: Int
+        -> Int
         -> [Tile]
         -> [((Int, Int), [Direction])]
         -> [Array (Int, Int) Tile]
-solvePuzzle bounds' tiles moves =
+solvePuzzle r c tiles moves =
         nubBy boardCongruent . catMaybes $ sequence . fst <$> foldr
                 puzzleIteration
-                [(A.listArray bounds' (repeat Nothing), tiles)]
+                [(A.listArray ((0, 0), (c - 1, r - 1)) (repeat Nothing), tiles)]
                 (reverse moves)
 
+-- | Given a placement 'idx', the directions to check 'direction', and
+-- current possible boards from previous placements, return an updated
+-- list with possible outcomes of those previous placements plus working
+-- new tile additions.
 puzzleIteration
         :: ((Int, Int), [Direction])
         -> [(Array (Int, Int) (Maybe Tile), [Tile])]
         -> [(Array (Int, Int) (Maybe Tile), [Tile])]
-puzzleIteration (idx', directions') acc =
-        acc >>= (\(board', tiles') -> placeTiles board' idx' tiles' directions')
+puzzleIteration (idx, directions) acc =
+        acc >>= (\(board', tiles') -> placeTiles board' idx tiles' directions)
 
+-- | Given a 'board', index 'idx', 'tiles', and 'directions', return a
+-- list of all possible ways a tile in the list of tiles can be placed in
+-- the specified index in a legal manner, along with the corresponding
+-- leftover tiles.'
 placeTiles
         :: Array (Int, Int) (Maybe Tile)
         -> (Int, Int)
@@ -88,6 +113,9 @@ placeTiles' board idx tiles directions tileIdx
         = (, take tileIdx tiles ++ drop (tileIdx + 1) tiles)
                 <$> placeTile board idx (tiles !! tileIdx) directions
 
+-- | Given a 'board', index 'idx', a 'tile', and 'directions'', return
+-- a list of all working rotations of the tile when placed at the
+-- specified index.
 placeTile
         :: Array (Int, Int) (Maybe Tile)
         -> (Int, Int)
@@ -110,6 +138,8 @@ placeTile' board idx tile directions
         | otherwise = Nothing
         where _valid = and (checkDirection board idx tile <$> directions)
 
+-- | Check that a certain direction is satisfied when placing a tile
+-- down.
 checkDirection
         :: Array (Int, Int) (Maybe Tile)
         -> (Int, Int)
@@ -159,10 +189,12 @@ rotateTile tile = execState
         )
         tile
 
+-- | Check if a board is a rotation of another board.
 boardCongruent
         :: (Ix b, Num b) => Array (b, b) Tile -> Array (b, b) Tile -> Bool
 
 boardCongruent a = or . fmap (== a) . take 4 . iterate rotateBoard
+
 rotateBoard :: (Ix a, Ix b, Num b) => Array (b, a) Tile -> Array (a, b) Tile
 rotateBoard board = rotateTile <$> A.array
         ((swap *** swap) _bounds)
