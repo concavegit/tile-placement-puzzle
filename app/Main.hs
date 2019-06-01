@@ -1,9 +1,9 @@
 module Main where
 
 import           Puzzle
+import           Data.Foldable
 import           Data.List
 import qualified Data.Array                    as A
-
 
 puzzle0 :: [Tile]
 puzzle0 =
@@ -55,6 +55,4 @@ puzzle0 =
         ]
 
 main :: IO ()
-main = putStrLn $ intercalate
-        "\n\n"
-        (intercalate "\n" . fmap show . A.elems <$> solvePuzzle 3 3 puzzle0)
+main = traverse_ (putStrLn . showBoard) (solvePuzzle 3 3 puzzle0)

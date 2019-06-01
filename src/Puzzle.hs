@@ -15,6 +15,7 @@ import           Data.Tuple
 import           Control.Arrow
 import           Data.List
 
+-- * Utility functions
 -- | A class for complementary data types, such as the edges of the
 -- puzzle.
 class Eq a => Complementary a where
@@ -38,7 +39,7 @@ data Tile = Tile
   , _tileRight :: TileEdge
   , _tileTop :: TileEdge
   , _tileBottom :: TileEdge
-  } deriving (Eq, Show)
+  } deriving Eq
 
 makeLenses ''Tile
 
@@ -183,9 +184,9 @@ boardCongruent
 boardCongruent a = or . fmap (== a) . take 4 . iterate rotateBoard
 
 rotateBoard :: (Ix a, Ix b, Num b) => Array (b, a) Tile -> Array (a, b) Tile
-rotateBoard board = rotateTile <$> A.array
-        ((swap *** swap) _bounds)
-        (zip (swap . first (x1 + x0 -) <$> A.indices board) (A.elems board))
+rotateBoard board = rotateTile <$> (transposeArray $ reverseArray board)
+        -- ((swap *** swap) _bounds)
+        -- (zip (swap . first (x1 + x0 -) <$> A.indices board) (A.elems board))
         where _bounds@((x0, _), (x1, _)) = A.bounds board
 
 -- | Place tiles sequentially in a growing square, growing the
@@ -208,3 +209,63 @@ generateMoves' n =
                        ([North] : repeat [West, North])
                 ++ zip ((n - 1, ) <$> [0 .. n - 1])
                        ([West] : repeat [West, North])
+
+transposeArray :: (Ix b, Ix a) => Array (a, b) e -> Array (b, a) e
+transposeArray board = A.ixmap (swap *** swap $ A.bounds board) swap board
+
+reverseArray :: (Ix b1, Ix b2, Num b1) => Array (b1, b2) e -> Array (b1, b2) e
+reverseArray board = A.ixmap
+        (A.bounds board)
+        (first ((uncurry subtract . (fst *** fst)) (A.bounds board) -))
+        board
+
+-- * Pretty Printer
+showBoard :: Array (Int, Int) Tile -> String
+showBoard board = showBoard' r c (A.elems (transposeArray board))
+    where
+        (c, r) = (\((a, b), (d, e)) -> (d - a + 1, e - b + 1)) (A.bounds board)
+
+instance Show Tile where
+        show tile = unlines
+                [ _topDiv
+                , '|'
+                :  _leftSpaces _tileTop
+                ++ _tileTop
+                ++ _rightSpaces _tileTop
+                ++ "|"
+                , "| "
+                ++ _tileLeft
+                ++ replicate
+                           (_width - 4 - length _tileLeft - length _tileRight)
+                           ' '
+                ++ _tileRight
+                ++ " |"
+                , '|'
+                :  _leftSpaces _tileBottom
+                ++ _tileBottom
+                ++ _rightSpaces _tileBottom
+                ++ "|"
+                , _topDiv
+                ]
+
+            where
+                _tileLeft   = show $ tile ^. tileLeft
+                _tileRight  = show $ tile ^. tileRight
+                _tileTop    = show $ tile ^. tileTop
+                _tileBottom = show $ tile ^. tileBottom
+                _width      = 26
+                _leftPad tile' = div (_width - length tile') 2 - 1
+                _rightPad tile' = _width - 2 - _leftPad tile' - length tile'
+                _leftSpaces tile' = replicate (_leftPad tile') ' '
+                _rightSpaces tile' = replicate (_rightPad tile') ' '
+                _topDiv = '+' : replicate (_width - 2) '-' ++ "+"
+
+showTiles :: [Tile] -> String
+showTiles =
+        unlines . foldr (zipWith (++) . (lines . show)) ["", "", "", "", ""]
+
+showBoard' :: Int -> Int -> [Tile] -> String
+showBoard' _ _ [] = ""
+showBoard' 0 _ _  = ""
+showBoard' r c tiles =
+        showTiles (take c tiles) ++ showBoard' (r - 1) c (drop c tiles)
