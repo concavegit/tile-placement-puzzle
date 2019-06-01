@@ -20,9 +20,9 @@ import           Data.List
 class Eq a => Complementary a where
   -- | Return the complement of the argument.
   complement :: a -> a
-  isComplement :: a -> a -> Bool
 
   -- | Check if the two arguments are complements of each other.
+  isComplement :: a -> a -> Bool
   isComplement = (==) . complement
 
 -- | Data type for the edges of the tiles.
