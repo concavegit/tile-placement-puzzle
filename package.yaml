@@ -16,7 +16,6 @@ description:         Please see the README on GitLab at <https://gitlab.com/conc
 dependencies:
   - base >= 4.7 && < 5
   - array
-  - grid
   - lens
   - mtl
 
