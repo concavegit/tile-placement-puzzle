@@ -188,6 +188,17 @@ rotateBoard board = rotateTile <$> A.array
         (zip (swap . first (x1 + x0 -) <$> A.indices board) (A.elems board))
         where _bounds@((x0, _), (x1, _)) = A.bounds board
 
+-- | Place tiles sequentially in a growing square, growing the
+-- rectangle on the bottom then on the right.
+generateMoves :: Int -> Int -> [((Int, Int), [Direction])]
+generateMoves r c
+        | r >= c = generateMoves' c ++ zip
+                (flip (,) <$> [c .. r - 1] <*> [0 .. c - 1])
+                (take c ([North] : repeat [North, West]) >>= replicate (r - c))
+        | otherwise = generateMoves' r ++ zip
+                ((,) <$> [r .. c - 1] <*> [0 .. r - 1])
+                (take r ([West] : repeat [West, North]) >>= replicate (c - r))
+
 generateMoves' :: Int -> [((Int, Int), [Direction])]
 generateMoves' 0 = []
 generateMoves' 1 = [((0, 0), [])]
@@ -197,12 +208,3 @@ generateMoves' n =
                        ([North] : repeat [West, North])
                 ++ zip ((n - 1, ) <$> [0 .. n - 1])
                        ([West] : repeat [West, North])
-
-generateMoves :: Int -> Int -> [((Int, Int), [Direction])]
-generateMoves r c
-        | r >= c = generateMoves' c ++ zip
-                (flip (,) <$> [c .. r - 1] <*> [0 .. c - 1])
-                (take c ([North] : repeat [North, West]) >>= replicate (r - c))
-        | otherwise = generateMoves' r ++ zip
-                ((,) <$> [r .. c - 1] <*> [0 .. r - 1])
-                (take r ([West] : repeat [West, North]) >>= replicate (c - r))
