@@ -192,7 +192,6 @@ rotateTile tile = execState
 -- | Check if a board is a rotation of another board.
 boardCongruent
         :: (Ix b, Num b) => Array (b, b) Tile -> Array (b, b) Tile -> Bool
-
 boardCongruent a = or . fmap (== a) . take 4 . iterate rotateBoard
 
 rotateBoard :: (Ix a, Ix b, Num b) => Array (b, a) Tile -> Array (a, b) Tile
