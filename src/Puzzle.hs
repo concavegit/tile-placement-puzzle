@@ -56,11 +56,7 @@ instance Complementary TileEdge where
 
 -- | Solve the puzzle. 'r' and 'c' are the amount rows and columns in
 -- the puzzle and 'tiles' are the available tiles.
-solvePuzzle
-        :: Int
-        -> Int
-        -> [Tile]
-        -> [Array (Int, Int) Tile]
+solvePuzzle :: Int -> Int -> [Tile] -> [Array (Int, Int) Tile]
 solvePuzzle r c tiles =
         nubBy boardCongruent . catMaybes $ sequence . fst <$> foldr
                 puzzleIteration
