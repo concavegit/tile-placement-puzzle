@@ -1,8 +1,8 @@
 module Main where
 
 import           Puzzle
-import Data.List
-import qualified Data.Array as A
+import           Data.List
+import qualified Data.Array                    as A
 
 
 puzzle0 :: [Tile]
@@ -68,4 +68,6 @@ moves0 =
         ]
 
 main :: IO ()
-main = putStrLn $ intercalate "\n\n" (intercalate "\n" . fmap show . A.elems <$> solvePuzzle 3 3 puzzle0)
+main = putStrLn $ intercalate
+        "\n\n"
+        (intercalate "\n" . fmap show . A.elems <$> solvePuzzle 3 3 puzzle0)
