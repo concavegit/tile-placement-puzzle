@@ -184,10 +184,7 @@ boardCongruent
 boardCongruent a = or . fmap (== a) . take 4 . iterate rotateBoard
 
 rotateBoard :: (Ix a, Ix b, Num b) => Array (b, a) Tile -> Array (a, b) Tile
-rotateBoard board = rotateTile <$> (transposeArray $ reverseArray board)
-        -- ((swap *** swap) _bounds)
-        -- (zip (swap . first (x1 + x0 -) <$> A.indices board) (A.elems board))
-        where _bounds@((x0, _), (x1, _)) = A.bounds board
+rotateBoard board = rotateTile <$> transposeArray (reverseArray board)
 
 -- | Place tiles sequentially in a growing square, growing the
 -- rectangle on the bottom then on the right.

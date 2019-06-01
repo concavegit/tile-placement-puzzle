@@ -2,8 +2,6 @@ module Main where
 
 import           Puzzle
 import           Data.Foldable
-import           Data.List
-import qualified Data.Array                    as A
 
 puzzle0 :: [Tile]
 puzzle0 =
